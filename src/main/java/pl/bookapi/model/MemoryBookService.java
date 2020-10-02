@@ -12,9 +12,16 @@ import java.util.List;
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MemoryBookService {
     private final List<Book> bookList = new ArrayList<>();
+    private static Long nextId = 4L;
+
+    public MemoryBookService() {
+        this.bookList.add(new Book(1L, "9788324631766", "Thinking	in	Java", "Bruce Eckel", "Helion", "programming"));
+        this.bookList.add(new Book(2L, "9788324627738", "Rusz glowa	Java.", "Sierra Kathy, Bates	Bert", "Helion", "programming"));
+        this.bookList.add(new Book(3L, "9780130819338", "Java 2. Podstawy", "Cay Horstmann, Gary	Cornell", "Helion", "programming"));
+    }
 
     public List<Book> getBookList(){
-        return bookList;
+        return this.bookList;
     }
 
     public Book readBook (Long id){
@@ -31,6 +38,8 @@ public class MemoryBookService {
     }
 
     public void addBook(Book newBook){
+        newBook.setId(nextId);
+        nextId++;
         this.bookList.add(newBook);
     }
 
