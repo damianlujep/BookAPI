@@ -3,8 +3,10 @@ package pl.bookapi.model;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,12 +36,17 @@ public class MemoryBookService implements BookService{
 
     @Override
     public Book readBook (Long id){
+        boolean exist = false;
+
         for (Book book : this.bookList) {
             if (book.getId().equals(id)) {
+                exist = true;
                 return book;
             }
         }
-        return  null;
+
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "nie ma takiej książki");
     }
 
     @Override
@@ -66,5 +73,4 @@ public class MemoryBookService implements BookService{
             }
         }
     }
-
 }

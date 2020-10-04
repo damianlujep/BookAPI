@@ -1,5 +1,7 @@
 package pl.bookapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.bookapi.model.Author;
@@ -34,11 +36,14 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book searchBook(@PathVariable Long id){
-        return bookService.readBook(id);
+        return this.bookService.readBook(id);
     }
 
     @PostMapping
     public void addBook(@RequestBody Book newBOok){
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         bookService.addBook(newBOok);
     }
 
