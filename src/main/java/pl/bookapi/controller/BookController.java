@@ -1,9 +1,9 @@
 package pl.bookapi.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.bookapi.model.Author;
 import pl.bookapi.model.Book;
 import pl.bookapi.model.BookService;
@@ -25,7 +25,7 @@ public class BookController {
     @RequestMapping("helloBook")
     public Book helloBook(){
         Author bruceEckel = new Author("Bruce","Eckel", LocalDate.of(1957,7,8));
-        return new Book(1L, "9788324631766", "Thinking in Java", bruceEckel
+        return new Book(1L, "9788324631766", "Thinking in Java", "Bruce Eckel"
                 , "Helion", "programming");
     }
 
@@ -36,7 +36,11 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book searchBook(@PathVariable Long id){
-        return this.bookService.readBook(id);
+        return this.bookService.readBook(id).orElseThrow(() -> {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Entity not found"
+            );
+        });
     }
 
     @PostMapping

@@ -11,9 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
-@Primary
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MemoryBookService implements BookService{
     private final List<Book> bookList = new ArrayList<>();
@@ -24,9 +24,9 @@ public class MemoryBookService implements BookService{
         Author sierraKathy = new Author("Sierra","Kathy", LocalDate.of(1957,12,20));
         Author cayHorstmann = new Author("Cay","Horstmann", LocalDate.of(1966,8,20));
 
-        this.bookList.add(new Book(1L, "9788324631766", "Thinking	in	Java", bruceEckel, "Helion", "programming"));
-        this.bookList.add(new Book(2L, "9788324627738", "Rusz glowa	Java.", sierraKathy, "Helion", "programming"));
-        this.bookList.add(new Book(3L, "9780130819338", "Java 2. Podstawy", cayHorstmann, "Helion", "programming"));
+//        this.bookList.add(new Book(1L, "9788324631766", "Thinking	in	Java", bruceEckel, "Helion", "programming"));
+//        this.bookList.add(new Book(2L, "9788324627738", "Rusz glowa	Java.", sierraKathy, "Helion", "programming"));
+//        this.bookList.add(new Book(3L, "9780130819338", "Java 2. Podstawy", cayHorstmann, "Helion", "programming"));
     }
 
     @Override
@@ -35,19 +35,24 @@ public class MemoryBookService implements BookService{
     }
 
     @Override
-    public Book readBook (Long id){
-        boolean exist = false;
-
-        for (Book book : this.bookList) {
-            if (book.getId().equals(id)) {
-                exist = true;
-                return book;
-            }
-        }
-
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "nie ma takiej książki");
+    public Optional<Book> readBook(Long id) {
+        return bookList.stream().filter(item -> item.getId().equals(id)).findFirst();
     }
+
+//    @Override
+//    public Book readBook (Long id){
+//        boolean exist = false;
+//
+//        for (Book book : this.bookList) {
+//            if (book.getId().equals(id)) {
+//                exist = true;
+//                return book;
+//            }
+//        }
+//
+//        throw new ResponseStatusException(
+//                HttpStatus.NOT_FOUND, "nie ma takiej książki");
+//    }
 
     @Override
     public void deleteBook (Long id){
